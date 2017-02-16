@@ -23,7 +23,7 @@ class EntityReferenceCategorizedAutocompleteWidget extends EntityReferenceAutoco
 
     //TODO: Cargar caonfiguracion del campo
     //y en funcion de la taxonomia configurada y el tipo de 
-    //widget crearlo aqui
+    //widget crearlo aquí
     
     $widget['category_id'] = array(
       '#title' => $this->t('Category'),
