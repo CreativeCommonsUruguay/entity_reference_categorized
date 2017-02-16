@@ -1,0 +1,11 @@
+#Based on https://www.lullabot.com/articles/extending-a-field-type-in-drupal-8
+#Exgends EntityReference FieldType
+
+name: 'Entity Reference Categorized'
+type: module
+description: 'Extends Entity Refecente adding a category (taxonomy term) to the relation'
+package: Field types
+version: '8.2.6'
+core: '8.x' 
+project: 'drupal'
+datestamp: 1485975642
