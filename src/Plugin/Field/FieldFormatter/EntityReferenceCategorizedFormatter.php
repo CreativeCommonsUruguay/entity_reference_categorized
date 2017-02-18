@@ -21,17 +21,17 @@ class EntityReferenceCategorizedFormatter extends EntityReferenceLabelFormatter 
         $elements = parent::viewElements($items, $langcode);
         $values = $items->getValue();
         $returnElements = array();
-        $agrupados = array();
+        $categorized = array();
 
         //agrupamos valores por categoria
         foreach ($elements as $delta => $entity) {
-            if (!array_key_exists($values[$delta]['category_id'], $agrupados)) {
-                $agrupados[$values[$delta]['category_id']] = array();
+            if (!array_key_exists($values[$delta]['category_id'], $categorized)) {
+                $categorized[$values[$delta]['category_id']] = array();
             }
-            $agrupados[$values[$delta]['category_id']][$delta] = $entity;
+            $categorized[$values[$delta]['category_id']][$delta] = $entity;
         }
 
-        foreach ($agrupados as $category_id => $groupedElements) {
+        foreach ($categorized as $category_id => $groupedElements) {
             $returnElements[] = array(
                 '#type' => 'html_tag',
                 '#tag' => 'h3',
