@@ -52,6 +52,7 @@ class EntityReferenceCategorizedAutocompleteWidget extends EntityReferenceAutoco
             '#default_value' => isset($cagtegory_entities[$delta]) ? $cagtegory_entities[$delta] : NULL,
             '#size' => 20,//$this->getSetting('size'),
             '#placeholder' => t('Taxonomy term'),
+            '#weight' => '100',
         );
 
         if ($this->getSelectionHandlerSetting('auto_create') && ($bundle = $this->getAutocreateBundle())) {
