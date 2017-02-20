@@ -2,6 +2,7 @@
 
 namespace Drupal\entity_reference_categorized\Plugin\Field\FieldType;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\TypedData\DataDefinition;
@@ -10,6 +11,7 @@ use Drupal\Core\TypedData\DataReferenceTargetDefinition;
 use Drupal\Core\TypedData\DataReferenceDefinition;
 use Drupal\Core\Entity\TypedData\EntityDataDefinition;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * @FieldType(
@@ -22,8 +24,26 @@ use Drupal\Core\Entity\EntityTypeInterface;
  *   list_class = "\Drupal\entity_reference_categorized\Plugin\Field\FieldType\EntityReferenceCategorizedFieldItemList",
  * 
  * )
- */ 
+ */
 class EntityReferenceCategorized extends EntityReferenceItem {
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function defaultStorageSettings() {
+        return array(
+            'category_type' => \Drupal::moduleHandler()->moduleExists('taxonomy_term') ? 'taxonomy_term' : 'user',
+                ) + parent::defaultStorageSettings();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function defaultFieldSettings() {
+        return array(
+            'category_taxonomy' => array(),
+                ) + parent::defaultFieldSettings();
+    }
 
     public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
         $properties = parent::propertyDefinitions($field_definition);
@@ -105,8 +125,43 @@ class EntityReferenceCategorized extends EntityReferenceItem {
         return $schema;
     }
 
-    //TODO: agregar configuracion campo
-    //  Seleccionar taxonomia
-    //  
-    //  TIP: Basarse en la calase entityreference
+    /**
+     * {@inheritdoc}
+     */
+    public function fieldSettingsForm(array $form, FormStateInterface $form_state) {
+        $form = parent::fieldSettingsForm($form, $form_state);
+
+        $field = $form_state->getFormObject()->getEntity();
+
+        $category_type = 'taxonomy_term'; //$this->getSetting('target_type');
+        //vocabularios
+        $vocabularies = taxonomy_vocabulary_get_names();
+        foreach ($vocabularies as $voc_id) {
+            $vocab = entity_load('taxonomy_vocabulary', $voc_id);
+            $options[$voc_id] = $vocab->label();
+        }
+
+        $form['category_taxonomy'] = array(
+            '#type' => 'details',
+            '#title' => t('Category type'),
+            '#open' => TRUE,
+            '#tree' => TRUE,
+            '#process' => array(array(get_class($this), 'formProcessMergeParent')),
+        );
+
+        $form['category_taxonomy']['category_taxonomy'] = array(
+            '#type' => 'select',
+            '#title' => t('Category taxonomy'),
+            '#options' => $options,
+            '#default_value' => $field->getSetting('category_taxonomy'),
+            '#required' => TRUE,
+            '#ajax' => TRUE,
+            '#limit_validation_errors' => array(),
+        );
+
+        //TODO: analizar dependenias al igual que EntityReference 
+
+        return $form;
+    }
+
 }

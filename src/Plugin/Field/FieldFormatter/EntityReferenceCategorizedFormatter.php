@@ -32,10 +32,11 @@ class EntityReferenceCategorizedFormatter extends EntityReferenceLabelFormatter 
         }
 
         foreach ($categorized as $category_id => $groupedElements) {
+            $term = entity_load('taxonomy_term', $category_id);    
             $returnElements[] = array(
                 '#type' => 'html_tag',
                 '#tag' => 'h3',
-                '#value' => $this->t('Categoría ' . $category_id),
+                '#value' => $this->t($term->label()),
             );
             foreach ($groupedElements as $delta => $entity) {
                 $returnElements[] = $entity;
@@ -45,3 +46,5 @@ class EntityReferenceCategorizedFormatter extends EntityReferenceLabelFormatter 
     }
 
 }
+
+//TODO: crear mas opciones de formatters

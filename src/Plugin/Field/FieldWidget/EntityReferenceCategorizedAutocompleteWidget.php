@@ -20,16 +20,20 @@ class EntityReferenceCategorizedAutocompleteWidget extends EntityReferenceAutoco
 
     public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
         $element = parent::formElement($items, $delta, $element, $form, $form_state);
-
-        //$category_type = $this->getFieldSetting('category_type');
+        
+        //configuracion
         $category_type = 'taxonomy_term';
+        $category_taxonomy = $this->getFieldSetting('category_taxonomy');
+        
+        //lista de categorias de las referencias
         $cagtegory_entities = $items->referencedCategoryEntities();
 
+        //configuracion necesaria para autocomplete, basado en entityreference
         // Append the match operation to the selection settings.
         $selection_settings = $this->getFieldSetting('handler_settings') + ['match_operator' => $this->getSetting('match_operator')];
         $selection_settings = array(
             'target_bundles' => array(
-                'tipo_de_autoria' => 'tipo_de_autoria'
+                'tipo_de_autoria' => $category_taxonomy
             ),
             'sort' => array(
                 'field' => '_none'
@@ -39,20 +43,6 @@ class EntityReferenceCategorizedAutocompleteWidget extends EntityReferenceAutoco
             'match_operator' => 'CONTAINS',
         );
 
-
-//        $element['category_id'] = array(
-//            '#type' => 'entity_autocomplete',
-//            '#target_type' => $category_type,
-//            '#selection_handler' => $this->getFieldSetting('handler'),
-//            '#selection_settings' => $selection_settings,
-//            // Entity reference field items are handling validation themselves via
-//            // the 'ValidReference' constraint.
-//            '#validate_reference' => FALSE,
-//            '#maxlength' => 1024,
-//            '#default_value' => isset($referenced_entities[$delta]) ? $referenced_entities[$delta] : NULL,
-//            '#size' => $this->getSetting('size'),
-//            '#placeholder' => $this->getSetting('placeholder'),
-//        );
         $element['category_id'] = array(
             '#type' => 'entity_autocomplete',
             '#target_type' => $category_type,
@@ -64,8 +54,6 @@ class EntityReferenceCategorizedAutocompleteWidget extends EntityReferenceAutoco
             '#placeholder' => 'Ingresar categoria',
         );
 
-
-
         if ($this->getSelectionHandlerSetting('auto_create') && ($bundle = $this->getAutocreateBundle())) {
             $element['category_id']['#autocreate'] = array(
                 'bundle' => $bundle,
@@ -76,5 +64,4 @@ class EntityReferenceCategorizedAutocompleteWidget extends EntityReferenceAutoco
         return $element;
     }
 
-    //TODO: agregar configuracion de widget para 
 }
