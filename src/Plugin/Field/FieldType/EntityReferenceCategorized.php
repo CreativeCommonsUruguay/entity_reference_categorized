@@ -135,7 +135,7 @@ class EntityReferenceCategorized extends EntityReferenceItem {
         $category_type = $this->getSetting('category_type');
         
         //obtenemos todos los vocabularios para listar
-        //TODO: deberia ser dependiente del $catgory_type
+        //TODO: forma de obtener deberia ser dependiente del $catgory_type. Ej  EntityTypeBundleInfo::getBundleInfo($category_type);
         $vocabularies = taxonomy_vocabulary_get_names();
         foreach ($vocabularies as $voc_id) {
             $vocab = entity_load('taxonomy_vocabulary', $voc_id); 
