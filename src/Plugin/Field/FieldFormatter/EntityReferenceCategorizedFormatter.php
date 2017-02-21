@@ -23,6 +23,10 @@ class EntityReferenceCategorizedFormatter extends EntityReferenceLabelFormatter 
         $returnElements = array();
         $categorized = array();
 
+        //TODO: Analizar otras formas de agrupacion
+        //  -agrupar o mostrar lista plana con tipo de relacion como dato adjunto
+        //  -agrupar por categoria (como esta ahora)
+        //  
         //agrupamos valores por categoria
         foreach ($elements as $delta => $entity) {
             if (!array_key_exists($values[$delta]['category_id'], $categorized)) {
@@ -31,12 +35,24 @@ class EntityReferenceCategorizedFormatter extends EntityReferenceLabelFormatter 
             $categorized[$values[$delta]['category_id']][$delta] = $entity;
         }
 
+
+        //TODO: Analizar otra formas de ordenacion 
+        //  - ordenar peso de la taxonomia
+        //  - ordenar por delta del campo multivaluado
+        //  - ordendentro del grupo
+//        usort($categorized, function($tid1, $tid2) {
+//            $term1 = entity_load('taxonomy_term', $tid1);
+//            $term2 = entity_load('taxonomy_term', $tid2);
+//            return $term1->getWeight() > $term1->getWeight();
+//        });
+
         foreach ($categorized as $category_id => $groupedElements) {
-            $term = entity_load('taxonomy_term', $category_id);    
+            $category_type = $this->getFieldSetting('category_type');
+            $category = entity_load($category_type, $category_id);
             $returnElements[] = array(
                 '#type' => 'html_tag',
                 '#tag' => 'h3',
-                '#value' => $this->t($term->label()),
+                '#value' => $this->t($category->label()),
             );
             foreach ($groupedElements as $delta => $entity) {
                 $returnElements[] = $entity;
@@ -46,5 +62,3 @@ class EntityReferenceCategorizedFormatter extends EntityReferenceLabelFormatter 
     }
 
 }
-
-//TODO: crear mas opciones de formatters

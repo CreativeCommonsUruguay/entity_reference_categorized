@@ -10,7 +10,8 @@ use \Drupal\Core\Field\FieldDefinitionInterface;
 
 /**
  * Defines a item list class for entity reference fields.
- * Extendemos la clase para agregarle un helper y reimplementar algunas cosas (que no entiendo)
+ * 
+ * Extendemos la clase para agregarle un helper y reimplementar algunas cosas
  */
 class EntityReferenceCategorizedFieldItemList extends EntityReferenceFieldItemList {
 

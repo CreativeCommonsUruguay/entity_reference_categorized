@@ -22,18 +22,18 @@ class EntityReferenceCategorizedAutocompleteWidget extends EntityReferenceAutoco
         $element = parent::formElement($items, $delta, $element, $form, $form_state);
         
         //configuracion
-        $category_type = 'taxonomy_term';
-        $category_taxonomy = $this->getFieldSetting('category_taxonomy');
+        $category_type = $this->getFieldSetting('category_type');
+        $category_bundle = $this->getFieldSetting('category_bundle');
         
         //lista de categorias de las referencias
         $cagtegory_entities = $items->referencedCategoryEntities();
 
-        //configuracion necesaria para autocomplete, basado en entityreference
+        // configuracion necesaria para autocomplete, basado en EntityReference
         // Append the match operation to the selection settings.
-        $selection_settings = $this->getFieldSetting('handler_settings') + ['match_operator' => $this->getSetting('match_operator')];
+        // Emulamos estructura que crea EntityReference con la llamada: $this->getFieldSetting('handler_settings') + ['match_operator' => $this->getSetting('match_operator')];
         $selection_settings = array(
             'target_bundles' => array(
-                'tipo_de_autoria' => $category_taxonomy
+                'tipo_de_autoria' => $category_bundle
             ),
             'sort' => array(
                 'field' => '_none'
@@ -54,13 +54,6 @@ class EntityReferenceCategorizedAutocompleteWidget extends EntityReferenceAutoco
             '#placeholder' => t('Taxonomy term'),
             '#weight' => '100',
         );
-
-        if ($this->getSelectionHandlerSetting('auto_create') && ($bundle = $this->getAutocreateBundle())) {
-            $element['category_id']['#autocreate'] = array(
-                'bundle' => $bundle,
-                'uid' => ($entity instanceof EntityOwnerInterface) ? $entity->getOwnerId() : \Drupal::currentUser()->id()
-            );
-        }
 
         return $element;
     }

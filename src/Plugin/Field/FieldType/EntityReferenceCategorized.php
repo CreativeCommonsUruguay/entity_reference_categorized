@@ -14,6 +14,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
+ *  
  * @FieldType(
  *   id = "entity_reference_categorized",
  *   label = @Translation("Entity reference categorized"),
@@ -31,8 +32,11 @@ class EntityReferenceCategorized extends EntityReferenceItem {
      * {@inheritdoc}
      */
     public static function defaultStorageSettings() {
+        //Por el momento no se puede cambiar el tipo de entidad. 
+        //podria ser una mejora permitir cualquier tipo de entidad para 
+        //representar una categoria
         return array(
-            'category_type' => \Drupal::moduleHandler()->moduleExists('taxonomy_term') ? 'taxonomy_term' : 'user',
+            'category_type' => \Drupal::moduleHandler()->moduleExists('taxonomy') ? 'taxonomy_term' : 'user',
                 ) + parent::defaultStorageSettings();
     }
 
@@ -41,18 +45,14 @@ class EntityReferenceCategorized extends EntityReferenceItem {
      */
     public static function defaultFieldSettings() {
         return array(
-            'category_taxonomy' => array(),
+            'category_bundle' => array(),
                 ) + parent::defaultFieldSettings();
     }
 
     public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
         $properties = parent::propertyDefinitions($field_definition);
 
-        //TODO: obtener configuracion
-        //$settings = $field_definition->getSettings();
-        //$category_type_info = \Drupal::entityManager()->getDefinition($settings['category_type']);
-        //$category_type = $settings['category_type'];
-        $category_type = 'taxonomy_term'; //se va cuando sea configurable
+        $category_type = $this->getFieldSetting('category_type'); //se va cuando sea configurable
         $category_type_info = \Drupal::entityManager()->getDefinition($category_type);
 
         $category_id_data_type = 'string';
@@ -93,7 +93,7 @@ class EntityReferenceCategorized extends EntityReferenceItem {
         $schema = parent::schema($field_definition);
 
         //$category_type = $field_definition->getSetting('target_type');
-        $category_type = 'taxonomy_term';
+        $category_type = $this->getFieldSetting('category_type');
         $category_type_info = \Drupal::entityManager()->getDefinition($category_type);
         $properties = static::propertyDefinitions($field_definition)['category_id'];
         if ($category_type_info->isSubclassOf('\Drupal\Core\Entity\FieldableEntityInterface') && $properties->getDataType() === 'integer') {
@@ -119,8 +119,9 @@ class EntityReferenceCategorized extends EntityReferenceItem {
             'category_id' => array('category_id')
         );
 
-        $schema['columns'] = array_merge($schema['columns'], $columns);
-        $schema['indexes'] = array_merge($schema['indexes'], $indexes);
+        //anexamos nuestro esquema para la configuracion al de EntiryReference
+        $schema['columns'] += $columns;
+        $schema['indexes'] += $indexes;
 
         return $schema;
     }
@@ -132,9 +133,9 @@ class EntityReferenceCategorized extends EntityReferenceItem {
         $form = parent::fieldSettingsForm($form, $form_state);
 
         $field = $form_state->getFormObject()->getEntity();
-
-        $category_type = 'taxonomy_term'; //$this->getSetting('target_type');
-        //vocabularios
+        $category_type = $this->getFieldSetting('category_type');
+        
+        //obtenemos todos los vocabularios para listar
         $vocabularies = taxonomy_vocabulary_get_names();
         foreach ($vocabularies as $voc_id) {
             $vocab = entity_load('taxonomy_vocabulary', $voc_id);
@@ -161,6 +162,9 @@ class EntityReferenceCategorized extends EntityReferenceItem {
 
         //TODO: analizar dependenias al igual que EntityReference 
 
+        //TODO: permitir crear entidades si no existen para usar una taxonomia libre. 
+        //      Ver configuracion de auto_create de ER
+        
         return $form;
     }
 
