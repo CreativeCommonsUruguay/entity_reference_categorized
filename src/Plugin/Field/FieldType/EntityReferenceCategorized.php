@@ -52,7 +52,7 @@ class EntityReferenceCategorized extends EntityReferenceItem {
     public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
         $properties = parent::propertyDefinitions($field_definition);
 
-        $category_type = $this->getFieldSetting('category_type'); //se va cuando sea configurable
+        $category_type = $field_definition->getSetting('category_type');
         $category_type_info = \Drupal::entityManager()->getDefinition($category_type);
 
         $category_id_data_type = 'string';
@@ -92,8 +92,7 @@ class EntityReferenceCategorized extends EntityReferenceItem {
     public static function schema(FieldStorageDefinitionInterface $field_definition) {
         $schema = parent::schema($field_definition);
 
-        //$category_type = $field_definition->getSetting('target_type');
-        $category_type = $this->getFieldSetting('category_type');
+        $category_type = $field_definition->getSetting('category_type');
         $category_type_info = \Drupal::entityManager()->getDefinition($category_type);
         $properties = static::propertyDefinitions($field_definition)['category_id'];
         if ($category_type_info->isSubclassOf('\Drupal\Core\Entity\FieldableEntityInterface') && $properties->getDataType() === 'integer') {
@@ -133,16 +132,17 @@ class EntityReferenceCategorized extends EntityReferenceItem {
         $form = parent::fieldSettingsForm($form, $form_state);
 
         $field = $form_state->getFormObject()->getEntity();
-        $category_type = $this->getFieldSetting('category_type');
+        $category_type = $this->getSetting('category_type');
         
         //obtenemos todos los vocabularios para listar
+        //TODO: deberia ser dependiente del $catgory_type
         $vocabularies = taxonomy_vocabulary_get_names();
         foreach ($vocabularies as $voc_id) {
-            $vocab = entity_load('taxonomy_vocabulary', $voc_id);
+            $vocab = entity_load('taxonomy_vocabulary', $voc_id); 
             $options[$voc_id] = $vocab->label();
         }
 
-        $form['category_taxonomy'] = array(
+        $form['category_bundle'] = array(
             '#type' => 'details',
             '#title' => t('Category type'),
             '#open' => TRUE,
@@ -150,11 +150,11 @@ class EntityReferenceCategorized extends EntityReferenceItem {
             '#process' => array(array(get_class($this), 'formProcessMergeParent')),
         );
 
-        $form['category_taxonomy']['category_taxonomy'] = array(
+        $form['category_bundle']['category_bundle'] = array(
             '#type' => 'select',
             '#title' => t('Category taxonomy'),
             '#options' => $options,
-            '#default_value' => $field->getSetting('category_taxonomy'),
+            '#default_value' => $field->getSetting('category_bundle'),
             '#required' => TRUE,
             '#ajax' => TRUE,
             '#limit_validation_errors' => array(),

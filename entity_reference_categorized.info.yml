@@ -5,7 +5,12 @@ name: 'Entity Reference Categorized'
 type: module
 description: 'Extends Entity Refecente adding a category (taxonomy term) to the relation'
 package: Field types
-version: '8.2.6'
+version: '0.2.0'
 core: '8.x' 
 project: 'drupal'
 datestamp: 1485975642
+
+dependencies:
+  - drupal:entity_reference
+  - drupal:taxonomy
+
