@@ -24,6 +24,8 @@ class EntityReferenceCategorizedAutocompleteWidget extends EntityReferenceAutoco
         //configuracion
         $category_type = $this->getFieldSetting('category_type');
         $category_bundle = $this->getFieldSetting('category_bundle');
+        $vocab = entity_load('taxonomy_vocabulary', $category_bundle); 
+
         
         //lista de categorias de las referencias
         $cagtegory_entities = $items->referencedCategoryEntities();
@@ -44,6 +46,7 @@ class EntityReferenceCategorizedAutocompleteWidget extends EntityReferenceAutoco
         );
 
         $element['category_id'] = array(
+            '#title' => (isset($vocab)?$vocab->label():'Categoria'),
             '#type' => 'entity_autocomplete',
             '#target_type' => $category_type,
             '#selection_settings' => $selection_settings,
