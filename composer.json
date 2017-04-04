@@ -20,6 +20,6 @@
      },
      "minimum-stability": "dev",
      "require": {
-       "drupal/entity_referejce": "*"
+       "drupal/entity_reference": "*"
      }
 }
