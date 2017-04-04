@@ -1,11 +1,25 @@
 {
-    "name": "vendor/entity-reference-categorized",
-    "description": "Description of project entity_reference_categorized.",
+    "name": "drupal/entity_reference_categorized",
+    "description": "Extends Entity Refecente Categorized adding name override and formatter",
+    "type": "drupal-module",
+    "homepage": "https://github.com/CreativeCommonsUruguay/entity_reference_categorized",
+    "license": "GPL",
     "authors": [
         {
-            "name": "marco",
-            "email": "marcoscalone@gmail.com"
+            "name": "Marco",
+            "email": "marcoscalone@gmail.com",
+            "role": "Maintainer"
         }
     ],
-    "require": {}
+    "minimum-stability": "dev",
+    "require": {},
+    "support": {
+       "issues": "https://github.com/CreativeCommonsUruguay/entity_reference_categorized/issues",
+       "irc": "irc://irc.freenode.org/drupal-contribute",
+       "source": "https://github.com/CreativeCommonsUruguay/entity_reference_categorized"
+     },
+     "minimum-stability": "dev",
+     "require": {
+       "drupal/entity_referejce": "*"
+     }
 }
