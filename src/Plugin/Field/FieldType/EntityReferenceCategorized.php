@@ -168,7 +168,7 @@ class EntityReferenceCategorized extends EntityReferenceItem {
 
         return $form;
     }
-
+    
     /**
      * Helpper that defines the relationships field available on views relationship.
      * 
