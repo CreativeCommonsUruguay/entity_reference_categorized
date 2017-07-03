@@ -37,11 +37,13 @@ class EntityReferenceCategorizedAutocompleteWidget extends EntityReferenceAutoco
                  $opt[$term->tid]=$term->name;
             }
             $element['category_id'] = array(
+                '#title' => (isset($vocab) ? $vocab->label() : 'Categoria'),
                 '#type' => 'select',
                 '#options' => $opt,
-                '#default_value' => isset($cagtegory_entities[$delta]) ? $cagtegory_entities[$delta]->tid->value : (isset($cagtegory_entities[0]) ? $cagtegory_entities[0]->tid->value : null),
+                '#default_value' => isset($cagtegory_entities[$delta]) ? $cagtegory_entities[$delta]->tid->value : null,
                 // Do not display a 'multiple' select box if there is only one option.
                 '#multiple' => $this->multiple && count($this->options) > 1,
+                '#weight' => '100',
             );
  
  
