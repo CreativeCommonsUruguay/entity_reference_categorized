@@ -2,6 +2,7 @@
     "name": "drupal/entity_reference_categorized",
     "description": "Extends Entity Refecente adding a reference type on each reference item",
     "type": "drupal-module",
+    "version":"1.0.1",
     "homepage": "https://github.com/CreativeCommonsUruguay/entity_reference_categorized",
     "license": "GPL",
     "authors": [
