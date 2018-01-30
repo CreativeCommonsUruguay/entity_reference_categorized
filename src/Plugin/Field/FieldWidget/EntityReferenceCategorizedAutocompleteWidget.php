@@ -29,12 +29,17 @@ class EntityReferenceCategorizedAutocompleteWidget extends EntityReferenceAutoco
         //lista de categorias de las referencias
         $cagtegory_entities = $items->referencedCategoryEntities();
 
-        //TODO: configurable
-        if (1) {
+        $widget_type='list'; //TODO: configurable
+        
+        if ($widget_type == 'list') {
             //lista de seleccion
-            $terms = \Drupal::entityManager()->getStorage('taxonomy_term')->loadTree($category_bundle);
-            foreach ($terms as $term) {
-                 $opt[$term->tid]=$term->name;
+            if(!empty($category_bundle)){
+                $terms = \Drupal::entityManager()->getStorage('taxonomy_term')->loadTree($category_bundle);
+                foreach ($terms as $term) {
+                     $opt[$term->tid]=$term->name;
+                }
+            }else{
+                $opt=array();
             }
             $element['category_id'] = array(
                 '#title' => (isset($vocab) ? $vocab->label() : 'Categoria'),
@@ -48,7 +53,7 @@ class EntityReferenceCategorizedAutocompleteWidget extends EntityReferenceAutoco
  
  
         } else {
-            //autocompletas
+            //autocompletar
             
             // configuracion necesaria para autocomplete, basado en EntityReference
             // Append the match operation to the selection settings.
