@@ -13,12 +13,10 @@
         }
     ],
     "minimum-stability": "dev",
-    "require": {},
     "support": {
        "issues": "https://github.com/CreativeCommonsUruguay/entity_reference_categorized/issues",
        "source": "https://github.com/CreativeCommonsUruguay/entity_reference_categorized"
      },
-     "minimum-stability": "dev",
      "require": {
        "drupal/entity_reference": "*"
      }
